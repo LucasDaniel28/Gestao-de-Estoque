@@ -1,0 +1,50 @@
+{
+  "name": "hikvision-hospital-backend",
+  "version": "1.0.0",
+  "description": "Backend para sistema de cadastro de pacientes hospitalares com integração Hikvision DS-K1T342MFWX",
+  "main": "dist/app.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/app.js",
+    "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "hikvision",
+    "hospital",
+    "patients",
+    "face-recognition",
+    "isapi",
+    "typescript"
+  ],
+  "author": "Hospital System",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.6.0",
+    "cors": "^2.8.5",
+    "digest-fetch": "^3.1.1",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-rate-limit": "^7.1.5",
+    "express-validator": "^7.0.1",
+    "form-data": "^4.0.0",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "sharp": "^0.32.6",
+    "uuid": "^9.0.1",
+    "xml2js": "^0.6.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/morgan": "^1.9.9",
+    "@types/multer": "^1.4.11",
+    "@types/node": "^20.8.10",
+    "@types/sharp": "^0.32.0",
+    "@types/uuid": "^9.0.7",
+    "@types/xml2js": "^0.4.14",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.2.2"
+  }
+}

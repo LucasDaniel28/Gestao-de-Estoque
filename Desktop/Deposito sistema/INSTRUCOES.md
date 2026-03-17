@@ -2,7 +2,7 @@
 
 Sistema completo de gestão de produtos e vendas, com carrinho de compras e emissão de nota fiscal em PDF.
 
-## 🚀 Tecnologias Utilizadas
+##  Tecnologias Utilizadas
 
 ### Backend
 - Node.js + Express
@@ -18,7 +18,7 @@ Sistema completo de gestão de produtos e vendas, com carrinho de compras e emis
 - Lucide React (ícones)
 - LocalStorage (persistência de dados)
 
-## 📦 Instalação
+##  Instalação
 
 ### Backend
 
@@ -46,7 +46,7 @@ npm start
 
 O frontend rodará em: `http://localhost:3000`
 
-## 🎯 Funcionalidades
+##  Funcionalidades
 
 ### Gestão de Produtos
 - ✅ Cadastrar novos produtos (nome, descrição, preço, quantidade, categoria)
@@ -86,11 +86,11 @@ O frontend rodará em: `http://localhost:3000`
 - ✅ Baixar nota fiscal de vendas anteriores
 - ✅ Visualizar total de vendas
 
-## 📊 Dados de Exemplo
+##  Dados de Exemplo
 
 O sistema já vem com 6 produtos de exemplo para facilitar os testes.
 
-## 🎨 Interface
+##  Interface
 
 - Design moderno e responsivo
 - Tema roxo/azul
@@ -98,7 +98,7 @@ O sistema já vem com 6 produtos de exemplo para facilitar os testes.
 - Notificações toast para feedback
 - Interface mobile-friendly
 
-## 💾 Armazenamento
+##  Armazenamento
 
 ### Frontend
 Os dados são armazenados no **localStorage** do navegador, permitindo persistência local sem necessidade de banco de dados.
@@ -106,7 +106,7 @@ Os dados são armazenados no **localStorage** do navegador, permitindo persistê
 ### Backend
 Os dados são armazenados em **memória**, reiniciando quando o servidor é reiniciado. Ideal para testes e desenvolvimento.
 
-## ⚙️ Configuração
+##  Configuração
 
 ### Backend (.env)
 ```env
@@ -118,7 +118,7 @@ CORS_ORIGIN=http://localhost:3000
 ### Frontend
 Não requer configuração adicional. O sistema funciona standalone.
 
-## 🧪 Testes
+##  Testes
 
 Para testar o sistema:
 
@@ -131,7 +131,7 @@ Para testar o sistema:
 7. Baixe a nota fiscal em PDF
 8. Visualize o histórico de vendas
 
-## 📝 Observações
+##  Observações
 
 - Sistema totalmente funcional sem necessidade de banco de dados externo
 - Sem sistema de login/autenticação
@@ -139,7 +139,7 @@ Para testar o sistema:
 - Código limpo e bem estruturado
 - Fácil de expandir e personalizar
 
-## 🔄 Limpeza de Dados
+##  Limpeza de Dados
 
 Para limpar os dados:
 - **Frontend**: Limpe o localStorage do navegador ou use as DevTools

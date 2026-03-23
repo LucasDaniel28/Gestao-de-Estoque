@@ -1,0 +1,13 @@
+{
+  "name": "gestao-de-estoque",
+  "version": "1.0.0",
+  "description": "Sistema Depósito - Gestão de Produtos e Vendas",
+  "scripts": {
+    "build": "cd frontend && npm run build",
+    "start": "cd frontend && npm start",
+    "vercel-build": "cd frontend && npm run build"
+  },
+  "engines": {
+    "node": "18.x"
+  }
+}

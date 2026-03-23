@@ -1,111 +1,66 @@
 import { Product, ProductCreateRequest, ProductUpdateRequest, Sale, SaleCreateRequest } from '../types';
+import { productsLocalStorage, salesLocalStorage } from './localStorageService';
 import jsPDF from 'jspdf';
 
-const API_URL = 'http://localhost:3001/api';
-
-// Produtos
+// Produtos - usa localStorage como persistência
 export const productsService = {
   getAll: async (): Promise<Product[]> => {
-    const response = await fetch(`${API_URL}/products`);
-    if (!response.ok) throw new Error('Erro ao buscar produtos');
-    const data = await response.json();
-    return data.data.map((p: any) => ({
-      ...p,
-      createdAt: new Date(p.createdAt),
-      updatedAt: new Date(p.updatedAt),
-    }));
+    return productsLocalStorage.getAll();
   },
 
   getById: async (id: string): Promise<Product> => {
-    const response = await fetch(`${API_URL}/products/${id}`);
-    if (!response.ok) throw new Error('Produto não encontrado');
-    const data = await response.json();
-    return {
-      ...data.data,
-      createdAt: new Date(data.data.createdAt),
-      updatedAt: new Date(data.data.updatedAt),
-    };
+    const product = productsLocalStorage.getById(id);
+    if (!product) throw new Error('Produto não encontrado');
+    return product;
   },
 
   create: async (product: ProductCreateRequest): Promise<Product> => {
-    const response = await fetch(`${API_URL}/products`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(product),
-    });
-    if (!response.ok) throw new Error('Erro ao criar produto');
-    const data = await response.json();
-    return {
-      ...data.data,
-      createdAt: new Date(data.data.createdAt),
-      updatedAt: new Date(data.data.updatedAt),
-    };
+    return productsLocalStorage.add(product);
   },
 
   update: async (id: string, product: ProductUpdateRequest): Promise<Product> => {
-    const response = await fetch(`${API_URL}/products/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(product),
-    });
-    if (!response.ok) throw new Error('Erro ao atualizar produto');
-    const data = await response.json();
-    return {
-      ...data.data,
-      createdAt: new Date(data.data.createdAt),
-      updatedAt: new Date(data.data.updatedAt),
-    };
+    const updated = productsLocalStorage.update(id, product);
+    if (!updated) throw new Error('Erro ao atualizar produto');
+    return updated;
   },
 
   delete: async (id: string): Promise<void> => {
-    const response = await fetch(`${API_URL}/products/${id}`, {
-      method: 'DELETE',
-    });
-    if (!response.ok) throw new Error('Erro ao deletar produto');
+    const deleted = productsLocalStorage.delete(id);
+    if (!deleted) throw new Error('Erro ao deletar produto');
   },
 };
 
-// Vendas
+// Vendas - usa localStorage como persistência
 export const salesService = {
   getAll: async (): Promise<Sale[]> => {
-    const response = await fetch(`${API_URL}/sales`);
-    if (!response.ok) throw new Error('Erro ao buscar vendas');
-    const data = await response.json();
-    return data.data.map((s: any) => ({
-      ...s,
-      createdAt: new Date(s.createdAt),
-    }));
+    return salesLocalStorage.getAll();
   },
 
   getById: async (id: string): Promise<Sale> => {
-    const response = await fetch(`${API_URL}/sales/${id}`);
-    if (!response.ok) throw new Error('Venda não encontrada');
-    const data = await response.json();
-    return {
-      ...data.data,
-      createdAt: new Date(data.data.createdAt),
-    };
+    const sale = salesLocalStorage.getById(id);
+    if (!sale) throw new Error('Venda não encontrada');
+    return sale;
   },
 
   create: async (saleData: SaleCreateRequest): Promise<Sale> => {
-    const response = await fetch(`${API_URL}/sales`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(saleData),
-    });
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Erro ao criar venda');
+    // Atualiza estoque dos produtos vendidos
+    for (const item of saleData.items) {
+      const product = productsLocalStorage.getById(item.productId);
+      if (product) {
+        const quantityToDeduct = item.saleUnit === 'pacote' && product.packageQuantity
+          ? item.quantity * product.packageQuantity
+          : item.quantity;
+        const newQuantity = Math.max(0, product.quantity - quantityToDeduct);
+        productsLocalStorage.update(item.productId, { quantity: newQuantity });
+      }
     }
-    const data = await response.json();
-    return {
-      ...data.data,
-      createdAt: new Date(data.data.createdAt),
-    };
+
+    const total = saleData.items.reduce((sum, item) => sum + item.subtotal, 0);
+    return salesLocalStorage.add({ ...saleData, total });
   },
 
   downloadPDF: async (id: string): Promise<void> => {
-    // Busca a venda da API
+    // Busca a venda do localStorage
     const sale = await salesService.getById(id);
 
     // Cria o documento PDF usando jsPDF

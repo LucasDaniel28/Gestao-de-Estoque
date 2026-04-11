@@ -23,9 +23,9 @@ const ReportGrid: React.FC = () => {
       
       // Processar vendas como movimentos de saída
       salesData.forEach((sale) => {
-        sale.items.forEach((item) => {
+        sale.items.forEach((item, lineIndex) => {
           stockMovements.push({
-            id: `${sale.id}-${item.productId}`,
+            id: `${sale.id}-${item.productId}-${lineIndex}`,
             productId: item.productId,
             productName: item.productName,
             type: 'saida',
@@ -33,7 +33,7 @@ const ReportGrid: React.FC = () => {
             unitPrice: item.price,
             totalValue: item.subtotal,
             createdAt: sale.createdAt,
-            reason: `Venda #${sale.id.substring(0, 8).toUpperCase()}`
+            reason: `Venda #${String(sale.id).slice(0, 8).toUpperCase()}`
           });
         });
       });
@@ -105,7 +105,9 @@ const ReportGrid: React.FC = () => {
       field: 'createdAt',
       headerName: 'Data/Hora',
       width: 180,
-      valueFormatter: (params: any) => new Date(params.value as string).toLocaleString('pt-BR'),
+      // MUI X Data Grid v8+: valueFormatter recebe (value, row, column, apiRef)
+      valueFormatter: (value) =>
+        new Date(value as string | number | Date).toLocaleString('pt-BR'),
     },
     {
       field: 'productName',
@@ -132,21 +134,21 @@ const ReportGrid: React.FC = () => {
       headerName: 'Quantidade',
       width: 120,
       type: 'number',
-      valueFormatter: (params: any) => params.value.toLocaleString('pt-BR'),
+      valueFormatter: (value) => Number(value ?? 0).toLocaleString('pt-BR'),
     },
     {
       field: 'unitPrice',
       headerName: 'Preço Unit.',
       width: 130,
       type: 'number',
-      valueFormatter: (params: any) => `R$ ${params.value.toFixed(2)}`,
+      valueFormatter: (value) => `R$ ${Number(value ?? 0).toFixed(2)}`,
     },
     {
       field: 'totalValue',
       headerName: 'Valor Total',
       width: 140,
       type: 'number',
-      valueFormatter: (params: any) => `R$ ${params.value.toFixed(2)}`,
+      valueFormatter: (value) => `R$ ${Number(value ?? 0).toFixed(2)}`,
     },
     {
       field: 'reason',

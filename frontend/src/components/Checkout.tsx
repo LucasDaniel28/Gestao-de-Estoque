@@ -17,6 +17,7 @@ const Checkout: React.FC<CheckoutProps> = ({ onClose, onSuccess }) => {
     customerName: '',
     customerCPF: '',
     customerPhone: '',
+    generateInvoice: 'no' as 'yes' | 'no',
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -33,13 +34,17 @@ const Checkout: React.FC<CheckoutProps> = ({ onClose, onSuccess }) => {
       });
 
       toast.success('Venda realizada com sucesso!');
-      
-      // Download automático da nota fiscal
-      try {
-        await salesService.downloadPDF(sale.id);
-      } catch (pdfError) {
-        console.error('Erro ao baixar PDF:', pdfError);
-        toast.warning('Venda realizada, mas houve erro ao gerar a nota fiscal');
+
+      if (formData.generateInvoice === 'yes') {
+        try {
+          await salesService.downloadPDF(sale.id);
+          toast.success('Nota fiscal baixada com sucesso!');
+        } catch (pdfError) {
+          console.error('Erro ao baixar PDF:', pdfError);
+          toast.warning(
+            'Venda realizada, mas houve erro ao gerar a nota fiscal. Você pode tentar baixar depois em Registros de Vendas.'
+          );
+        }
       }
 
       clearCart();
@@ -59,6 +64,10 @@ const Checkout: React.FC<CheckoutProps> = ({ onClose, onSuccess }) => {
       ...prev,
       [name]: value,
     }));
+  };
+
+  const handleInvoiceChoice = (value: 'yes' | 'no') => {
+    setFormData((prev) => ({ ...prev, generateInvoice: value }));
   };
 
   const paymentMethods = [
@@ -136,6 +145,58 @@ const Checkout: React.FC<CheckoutProps> = ({ onClose, onSuccess }) => {
                 );
               })}
             </div>
+          </div>
+
+          {/* Nota fiscal */}
+          <div className="border-t pt-6">
+            <label className="block text-sm font-medium text-gray-700 mb-3">
+              Gerar nota fiscal (PDF) agora?
+            </label>
+            <div className="grid grid-cols-2 gap-3">
+              <label
+                className={`flex items-center gap-3 p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                  formData.generateInvoice === 'yes'
+                    ? 'border-purple-600 bg-purple-50'
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="generateInvoice"
+                  checked={formData.generateInvoice === 'yes'}
+                  onChange={() => handleInvoiceChoice('yes')}
+                  className="sr-only"
+                />
+                <span
+                  className={`font-medium ${formData.generateInvoice === 'yes' ? 'text-purple-600' : 'text-gray-700'}`}
+                >
+                  Sim, baixar agora
+                </span>
+              </label>
+              <label
+                className={`flex items-center gap-3 p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                  formData.generateInvoice === 'no'
+                    ? 'border-purple-600 bg-purple-50'
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="generateInvoice"
+                  checked={formData.generateInvoice === 'no'}
+                  onChange={() => handleInvoiceChoice('no')}
+                  className="sr-only"
+                />
+                <span
+                  className={`font-medium ${formData.generateInvoice === 'no' ? 'text-purple-600' : 'text-gray-700'}`}
+                >
+                  Não, depois
+                </span>
+              </label>
+            </div>
+            <p className="mt-2 text-xs text-gray-500">
+              Se escolher &quot;Não&quot;, você pode baixar a nota fiscal a qualquer momento em Registros de Vendas.
+            </p>
           </div>
 
           {/* Informações do Cliente (opcional) */}

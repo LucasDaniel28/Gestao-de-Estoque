@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "Sistema Depósito - Gestão de Produtos e Vendas",
   "scripts": {
-    "build": "cd frontend && npm ci && npm run build",
+    "build": "cd frontend && npm install && npm run build",
     "start": "cd frontend && npm start",
-    "vercel-build": "cd frontend && npm ci && npm run build"
+    "vercel-build": "cd frontend && npm install && npm run build"
   },
   "engines": {
     "node": "20.x"

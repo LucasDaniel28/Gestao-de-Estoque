@@ -9,9 +9,8 @@ yarn-debug.log*
 yarn-error.log*
 .DS_Store
 *.log
-build
 dist
 .git
 .gitignore
 README.md
-backend/src
+backend/
